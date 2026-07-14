@@ -94,6 +94,7 @@
 			case 'datenschutz': renderLegal(c.legal.datenschutz, 'Datenschutz'); break;
 		}
 		activateVideos(main);
+		wireNewsletter(main);
 
 		// Anker (z. B. #newsletter aus dem Footer) erst nach dem Rendern anspringen
 		if (location.hash) {
@@ -184,14 +185,16 @@
 		var n = c.newsletter || {};
 		var inner;
 		if (n.action_url) {
-			// Brevo-Formular: sendet erst beim Absenden Daten an Brevo, kein Fremd-Script
-			inner = '<form class="newsletter-form" method="POST" action="' + esc(n.action_url) + '" target="_blank">' +
+			// Brevo-Formular: sendet erst beim Absenden Daten an Brevo, kein Fremd-Script.
+			// Antwort kommt als JSON und wird inline angezeigt (siehe wireNewsletter).
+			inner = '<form class="newsletter-form" method="POST" action="' + esc(n.action_url) + '">' +
 				'<input type="email" name="EMAIL" required placeholder="E-mail address" autocomplete="email">' +
-				// Brevo-Spamschutz (Honeypot) + Sprache der Bestätigungsseite
+				// Brevo-Spamschutz (Honeypot) + Sprache
 				'<input type="text" name="email_address_check" value="" style="display:none" tabindex="-1" autocomplete="off">' +
 				'<input type="hidden" name="locale" value="de">' +
 				'<button type="submit">Subscribe</button>' +
 			'</form>' +
+			'<p class="newsletter-msg" role="status"></p>' +
 			'<p class="newsletter-hint">Double opt-in: you will receive a confirmation e-mail. Details in the <a href="datenschutz.html">privacy policy</a>.</p>';
 		} else {
 			// Fallback ohne Anbieter: Anmeldung per E-Mail
@@ -201,6 +204,34 @@
 		}
 		return '<div class="newsletter-block" id="newsletter"><h2>' + esc(n.heading || 'Newsletter') + '</h2>' +
 			(n.text ? '<p>' + esc(n.text) + '</p>' : '') + inner + '</div>';
+	}
+
+	// Newsletter-Formular per fetch absenden und Brevo-Antwort inline anzeigen
+	function wireNewsletter(root) {
+		var form = root.querySelector('.newsletter-form');
+		if (!form || !form.action) return;
+		form.addEventListener('submit', function (e) {
+			e.preventDefault();
+			var btn = form.querySelector('button');
+			var msg = form.parentNode.querySelector('.newsletter-msg');
+			btn.disabled = true;
+			msg.textContent = '…';
+			fetch(form.action, { method: 'POST', body: new FormData(form) })
+				.then(function (r) { return r.json(); })
+				.then(function (res) {
+					if (res.success) {
+						msg.textContent = 'Thank you! Please check your inbox and confirm your subscription.';
+						form.reset();
+					} else {
+						msg.textContent = res.message || 'Something went wrong. Please try again.';
+					}
+				})
+				.catch(function () {
+					// Fallback: klassisch absenden (zeigt dann Brevos eigene Antwort)
+					form.submit();
+				})
+				.finally(function () { btn.disabled = false; });
+		});
 	}
 
 	function renderAbout(c) {

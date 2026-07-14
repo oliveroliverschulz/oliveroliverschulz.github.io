@@ -189,6 +189,9 @@ p { margin-bottom: 1em; }
 
 .newsletter-hint { font-size: 13px; color: #666; margin-top: 10px; }
 
+.newsletter-msg { font-size: 15px; font-weight: 700; margin-top: 12px; }
+.newsletter-msg:empty { display: none; }
+
 /* ---------- Legal ---------- */
 
 .legal-text { max-width: 720px; white-space: pre-line; }
