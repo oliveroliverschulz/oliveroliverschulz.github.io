@@ -187,6 +187,9 @@
 			// Brevo-Formular: sendet erst beim Absenden Daten an Brevo, kein Fremd-Script
 			inner = '<form class="newsletter-form" method="POST" action="' + esc(n.action_url) + '" target="_blank">' +
 				'<input type="email" name="EMAIL" required placeholder="E-mail address" autocomplete="email">' +
+				// Brevo-Spamschutz (Honeypot) + Sprache der Bestätigungsseite
+				'<input type="text" name="email_address_check" value="" style="display:none" tabindex="-1" autocomplete="off">' +
+				'<input type="hidden" name="locale" value="de">' +
 				'<button type="submit">Subscribe</button>' +
 			'</form>' +
 			'<p class="newsletter-hint">Double opt-in: you will receive a confirmation e-mail. Details in the <a href="datenschutz.html">privacy policy</a>.</p>';

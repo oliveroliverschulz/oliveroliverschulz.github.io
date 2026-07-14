@@ -137,7 +137,7 @@
   },
   "newsletter": {
     "provider": "brevo",
-    "action_url": "",
+    "action_url": "https://bf3a974f.sibforms.com/serve/MUIFANTEqsa2lS724ilRK8hL9VRF1Zip9XicBYyxym316FWUI3myhhKg-PIDHb0uL1ise7PJLXK6q2IW11CfZtzzqB5COxf3GmUuxf5ncZtIyOMCmZZ9WHGaIkGtXUMjpeJiQKbshacWy1Oil1HzaHZdpVrhZ4YrQ189azbuGnTGnVD4NN-UHLwURLG-1C4v42wLO9CaR3iReqOuKQ==",
     "heading": "Newsletter",
     "text": "Sign up to receive occasional news about exhibitions and new projects. No tracking, unsubscribe anytime."
   },
