@@ -82,6 +82,9 @@ const TABS = [
 
 const $ = sel => document.querySelector(sel);
 
+const REPO = 'oliveroliverschulz/oliveroliverschulz.github.io';
+const IS_LOCAL = ['localhost', '127.0.0.1'].includes(location.hostname);
+
 // Verhindert, dass der Browser das Bild einfach öffnet, wenn man das
 // gestrichelte Feld beim Hineinziehen knapp verfehlt
 document.addEventListener('dragover', e => e.preventDefault());
@@ -147,9 +150,6 @@ function field(labelText, value, onChange, opts = {}) {
 }
 
 // ---------- Speichern/Upload: lokal (serve.py) ODER online (GitHub-API) ----------
-
-const REPO = 'oliveroliverschulz/oliveroliverschulz.github.io';
-const IS_LOCAL = ['localhost', '127.0.0.1'].includes(location.hostname);
 
 function ghToken(forceAsk) {
 	let t = localStorage.getItem('gh_token');
