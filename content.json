@@ -21,7 +21,11 @@
       "date": "2026-09-12",
       "dateText": "Opening Saturday, September 12, 2026",
       "text": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.",
-      "images": ["images/ex1-1.webp", "images/ex1-2.webp", "images/ex1-3.webp"],
+      "images": [
+        "images/ex1-1.webp",
+        "images/ex1-2.webp",
+        "images/ex1-3.webp"
+      ],
       "videos": []
     },
     {
@@ -34,9 +38,15 @@
       "date": "2026-03-20",
       "dateText": "March 20 — May 2, 2026",
       "text": "At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est lorem ipsum dolor sit amet.",
-      "images": ["images/ex2-1.webp", "images/ex2-2.webp"],
+      "images": [
+        "images/ex2-1.webp",
+        "images/ex2-2.webp"
+      ],
       "videos": [
-        { "youtube_id": "dQw4w9WgXcQ", "title": "Exhibition walkthrough" }
+        {
+          "youtube_id": "dQw4w9WgXcQ",
+          "title": "Exhibition walkthrough"
+        }
       ]
     },
     {
@@ -49,7 +59,11 @@
       "date": "2025-10-04",
       "dateText": "October 4 — November 30, 2025",
       "text": "",
-      "images": ["images/ex3-1.webp", "images/ex3-2.webp", "images/ex3-3.webp"],
+      "images": [
+        "images/ex3-1.webp",
+        "images/ex3-2.webp",
+        "images/ex3-3.webp"
+      ],
       "videos": []
     }
   ],
@@ -61,9 +75,15 @@
       "cover": "images/pr1-1.webp",
       "teaser": "A series of large-scale works exploring lorem ipsum dolor sit amet, consetetur sadipscing elitr.",
       "text": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.\n\nStet clita kasd gubergren, no sea takimata sanctus est lorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan.\n\nUt wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.",
-      "images": ["images/pr1-2.webp", "images/pr1-3.webp"],
+      "images": [
+        "images/pr1-2.webp",
+        "images/pr1-3.webp"
+      ],
       "videos": [
-        { "youtube_id": "dQw4w9WgXcQ", "title": "Studio documentation" }
+        {
+          "youtube_id": "dQw4w9WgXcQ",
+          "title": "Studio documentation"
+        }
       ]
     },
     {
@@ -73,7 +93,9 @@
       "cover": "images/pr2-1.webp",
       "teaser": "Sculptural interventions in public space, sed diam nonumy eirmod tempor invidunt.",
       "text": "Sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est.\n\nNam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum.",
-      "images": ["images/pr2-2.webp"],
+      "images": [
+        "images/pr2-2.webp"
+      ],
       "videos": []
     },
     {
@@ -83,7 +105,10 @@
       "cover": "images/pr3-1.webp",
       "teaser": "Photographic studies of light and material, at vero eos et accusam et justo duo dolores.",
       "text": "At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est lorem ipsum dolor sit amet.\n\nLorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat.",
-      "images": ["images/pr3-2.webp", "images/pr3-3.webp"],
+      "images": [
+        "images/pr3-2.webp",
+        "images/pr3-3.webp"
+      ],
       "videos": []
     },
     {
@@ -93,7 +118,9 @@
       "cover": "images/pr4-1.webp",
       "teaser": "An ongoing archive of found materials and drawings.",
       "text": "Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis.\n\nAt vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.",
-      "images": ["images/pr4-2.webp"],
+      "images": [
+        "images/pr4-2.webp"
+      ],
       "videos": []
     }
   ],
