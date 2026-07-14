@@ -87,6 +87,14 @@ const $ = sel => document.querySelector(sel);
 document.addEventListener('dragover', e => e.preventDefault());
 document.addEventListener('drop', e => e.preventDefault());
 
+// Frisch hochgeladene Bilder: Pfad → lokale Vorschau, solange GitHub noch baut
+const previewCache = {};
+
+// Unerwartete Fehler sichtbar machen statt still zu scheitern
+window.addEventListener('error', e => setStatus('Unerwarteter Fehler: ' + e.message, true));
+window.addEventListener('unhandledrejection', e =>
+	setStatus('Unerwarteter Fehler: ' + ((e.reason && e.reason.message) || e.reason), true));
+
 fetch('content.json?v=' + Date.now()).then(r => r.json()).then(c => {
 	content = c;
 	renderTabs();
@@ -218,16 +226,21 @@ function uploadImages(files, cb, single) {
 	} else {
 		(async () => {
 			const paths = [];
+			let i = 0;
 			for (const f of files) {
+				i++;
+				setStatus(`Lade Bild ${i}/${files.length} hoch …`);
 				const base = Date.now() + '-' + safeFilename(f.name);
 				// Zwei Größen: 1600px (Detail) + 800px (schnelles Laden auf Smartphones)
 				const full = await resizeToBase64(f, 1600, 0.8);
 				const sm = await resizeToBase64(f, 800, 0.75);
 				await ghPut('images/' + base + '.' + full.ext, full.b64, 'Upload ' + base);
 				await ghPut('images/' + base + '-sm.' + sm.ext, sm.b64, 'Upload ' + base + ' (klein)');
-				paths.push('images/' + base + '.' + full.ext);
+				const path = 'images/' + base + '.' + full.ext;
+				previewCache[path] = URL.createObjectURL(f);
+				paths.push(path);
 			}
-			setStatus('Bilder hochgeladen — Speichern nicht vergessen! (Vorschau ggf. erst nach ~1 Min sichtbar)');
+			setStatus('✓ Hochgeladen — jetzt noch oben rechts Speichern klicken!');
 			cb(paths);
 		})().catch(e => {
 			setStatus('Fehler: ' + e.message, true);
@@ -243,9 +256,13 @@ function imageManager(list, onChange, opts = {}) {
 		wrap.innerHTML = '';
 		const thumbs = el('<div class="thumbs"></div>');
 		list.forEach((src, i) => {
-			const t = el(`<div class="thumb"><img src="${src}"><div class="tools">
+			const t = el(`<div class="thumb"><img src="${previewCache[src] || src}"><div class="tools">
 				<button title="nach vorn">←</button><button title="nach hinten">→</button><button title="entfernen">✕</button>
 			</div></div>`);
+			const im = t.querySelector('img');
+			im.onerror = () => {
+				im.replaceWith(el('<div style="width:90px;height:68px;border:1px solid #ccc;background:#f5f5f5;font-size:10px;display:flex;align-items:center;justify-content:center;text-align:center;color:#888;padding:4px;box-sizing:border-box">wird gerade veröffentlicht …</div>'));
+			};
 			const [left, right, del] = t.querySelectorAll('button');
 			left.onclick = () => { if (i > 0) { list.splice(i - 1, 0, list.splice(i, 1)[0]); render(); onChange(); } };
 			right.onclick = () => { if (i < list.length - 1) { list.splice(i + 1, 0, list.splice(i, 1)[0]); render(); onChange(); } };
@@ -578,7 +595,10 @@ $('#save-btn').addEventListener('click', () => {
 	} else {
 		ghPut('content.json', utf8ToBase64(JSON.stringify(content, null, 2)), 'Update content')
 			.then(() => setStatus('Gespeichert ✓ — Website aktualisiert sich in ~1 Minute'))
-			.catch(e => setStatus('Fehler: ' + e.message, true));
+			.catch(e => {
+				setStatus('Fehler: ' + e.message, true);
+				alert('Speichern fehlgeschlagen: ' + e.message);
+			});
 	}
 });
 </script>
