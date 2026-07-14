@@ -82,6 +82,11 @@ const TABS = [
 
 const $ = sel => document.querySelector(sel);
 
+// Verhindert, dass der Browser das Bild einfach öffnet, wenn man das
+// gestrichelte Feld beim Hineinziehen knapp verfehlt
+document.addEventListener('dragover', e => e.preventDefault());
+document.addEventListener('drop', e => e.preventDefault());
+
 fetch('content.json?v=' + Date.now()).then(r => r.json()).then(c => {
 	content = c;
 	renderTabs();
@@ -206,7 +211,10 @@ function uploadImages(files, cb, single) {
 				setStatus('Bilder hochgeladen — Speichern nicht vergessen!');
 				cb(res.paths.map(p => p.path));
 			})
-			.catch(e => setStatus('Fehler: ' + e.message, true));
+			.catch(e => {
+				setStatus('Fehler: ' + e.message, true);
+				alert('Upload fehlgeschlagen: ' + e.message + '\n\nLäuft der lokale Server (start-oliver.bat)?');
+			});
 	} else {
 		(async () => {
 			const paths = [];
@@ -221,7 +229,10 @@ function uploadImages(files, cb, single) {
 			}
 			setStatus('Bilder hochgeladen — Speichern nicht vergessen! (Vorschau ggf. erst nach ~1 Min sichtbar)');
 			cb(paths);
-		})().catch(e => setStatus('Fehler: ' + e.message, true));
+		})().catch(e => {
+			setStatus('Fehler: ' + e.message, true);
+			alert('Upload fehlgeschlagen: ' + e.message);
+		});
 	}
 }
 
@@ -249,11 +260,19 @@ function imageManager(list, onChange, opts = {}) {
 		drop.ondragleave = () => drop.style.borderColor = '#bbb';
 		drop.ondrop = e => { e.preventDefault(); handle(e.dataTransfer.files); };
 		fileInput.onchange = () => handle(fileInput.files);
-		const handle = files => uploadImages(files, paths => {
-			if (opts.single) list.length = 0;
-			list.push(...paths);
-			render(); onChange();
-		});
+		const handle = files => {
+			const imgs = [...files].filter(f => (f.type || '').startsWith('image/') || /\.(jpe?g|png|gif|webp|avif)$/i.test(f.name));
+			if (!imgs.length) {
+				setStatus('Keine Bilddatei erkannt', true);
+				alert('Keine Bilddatei erkannt.\nBitte eine Bilddatei vom Computer in das gestrichelte Feld ziehen – oder das Feld anklicken und die Datei auswählen.');
+				return;
+			}
+			uploadImages(imgs, paths => {
+				if (opts.single) list.length = 0;
+				list.push(...paths);
+				render(); onChange();
+			});
+		};
 		wrap.appendChild(drop);
 		wrap.appendChild(fileInput);
 	};
