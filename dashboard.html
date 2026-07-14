@@ -55,7 +55,7 @@
 <body>
 
 <header>
-	<h1>Oliver Schulz — Dashboard</h1>
+	<h1>Oliver Schulz — Dashboard <span id="mode-badge" style="font-weight:400;font-size:12px;color:#aaa"></span></h1>
 	<a href="index.html" target="_blank">Website ansehen ↗</a>
 	<span id="save-status"></span>
 	<button id="save-btn">Speichern</button>
@@ -87,6 +87,10 @@ fetch('content.json?v=' + Date.now()).then(r => r.json()).then(c => {
 	renderTabs();
 	renderTab();
 });
+
+document.getElementById('mode-badge').textContent = IS_LOCAL
+	? '· lokaler Modus'
+	: '· Online-Modus: Speichern veröffentlicht direkt (~1 Min)';
 
 // ---------- Grundgerüst ----------
 
@@ -129,18 +133,88 @@ function field(labelText, value, onChange, opts = {}) {
 	return node;
 }
 
+// ---------- Speichern/Upload: lokal (serve.py) ODER online (GitHub-API) ----------
+
+const REPO = 'oliveroliverschulz/oliveroliverschulz.github.io';
+const IS_LOCAL = ['localhost', '127.0.0.1'].includes(location.hostname);
+
+function ghToken(forceAsk) {
+	let t = localStorage.getItem('gh_token');
+	if (!t || forceAsk) {
+		t = prompt('GitHub-Token eingeben (beginnt mit ghp_…).\nWird nur in diesem Browser gespeichert:');
+		if (t) localStorage.setItem('gh_token', t.trim());
+	}
+	return (t || '').trim();
+}
+
+async function ghPut(path, base64Content, message) {
+	const token = ghToken();
+	if (!token) throw new Error('Kein GitHub-Token');
+	const url = `https://api.github.com/repos/${REPO}/contents/${path}`;
+	const headers = { Authorization: 'token ' + token, Accept: 'application/vnd.github+json' };
+	// sha der bestehenden Datei holen (nötig zum Überschreiben)
+	let sha;
+	const head = await fetch(url + '?ref=main&t=' + Date.now(), { headers });
+	if (head.ok) sha = (await head.json()).sha;
+	const res = await fetch(url, {
+		method: 'PUT', headers,
+		body: JSON.stringify({ message, content: base64Content, branch: 'main', ...(sha ? { sha } : {}) }),
+	});
+	if (!res.ok) {
+		if (res.status === 401) { localStorage.removeItem('gh_token'); throw new Error('Token ungültig — bitte neu eingeben'); }
+		throw new Error('GitHub: ' + ((await res.json()).message || res.status));
+	}
+}
+
+function utf8ToBase64(str) {
+	return btoa(unescape(encodeURIComponent(str)));
+}
+
+function safeFilename(name) {
+	const base = name.replace(/\.[^.]*$/, '').toLowerCase()
+		.replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss')
+		.replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'bild';
+	return base + '.jpg';
+}
+
+// Bild im Browser auf max. 1920px verkleinern und als JPEG-Base64 zurückgeben
+async function resizeToJpegBase64(file, max = 1920, quality = 0.82) {
+	const bmp = await createImageBitmap(file);
+	const scale = Math.min(1, max / Math.max(bmp.width, bmp.height));
+	const canvas = document.createElement('canvas');
+	canvas.width = Math.round(bmp.width * scale);
+	canvas.height = Math.round(bmp.height * scale);
+	canvas.getContext('2d').drawImage(bmp, 0, 0, canvas.width, canvas.height);
+	const dataUrl = canvas.toDataURL('image/jpeg', quality);
+	return dataUrl.split(',')[1];
+}
+
 function uploadImages(files, cb, single) {
-	const fd = new FormData();
-	[...files].forEach(f => fd.append('file', f));
 	setStatus('Lade Bilder hoch …');
-	fetch('/upload', { method: 'POST', body: fd })
-		.then(r => r.json())
-		.then(res => {
-			if (!res.ok) throw new Error(res.error || 'Upload fehlgeschlagen');
-			setStatus('Bilder hochgeladen — Speichern nicht vergessen!');
-			cb(res.paths.map(p => p.path));
-		})
-		.catch(e => setStatus('Fehler: ' + e.message, true));
+	if (IS_LOCAL) {
+		const fd = new FormData();
+		[...files].forEach(f => fd.append('file', f));
+		fetch('/upload', { method: 'POST', body: fd })
+			.then(r => r.json())
+			.then(res => {
+				if (!res.ok) throw new Error(res.error || 'Upload fehlgeschlagen');
+				setStatus('Bilder hochgeladen — Speichern nicht vergessen!');
+				cb(res.paths.map(p => p.path));
+			})
+			.catch(e => setStatus('Fehler: ' + e.message, true));
+	} else {
+		(async () => {
+			const paths = [];
+			for (const f of files) {
+				const name = Date.now() + '-' + safeFilename(f.name);
+				const b64 = await resizeToJpegBase64(f);
+				await ghPut('images/' + name, b64, 'Upload ' + name);
+				paths.push('images/' + name);
+			}
+			setStatus('Bilder hochgeladen — Speichern nicht vergessen! (Vorschau ggf. erst nach ~1 Min sichtbar)');
+			cb(paths);
+		})().catch(e => setStatus('Fehler: ' + e.message, true));
+	}
 }
 
 function imageManager(list, onChange, opts = {}) {
@@ -436,6 +510,19 @@ function renderEinstellungen(m) {
 	card.appendChild(field('Zentrale E-Mail-Adresse', s.email, v => s.email = v, { type: 'email' }));
 	card.appendChild(field('Beschreibung (für Suchmaschinen)', s.description, v => s.description = v, { textarea: true }));
 	m.appendChild(card);
+
+	if (!IS_LOCAL) {
+		const tok = el('<div class="card"><h3>GitHub-Zugang (Online-Modus)</h3></div>');
+		tok.appendChild(el(`<p class="hint">Zum Speichern und Hochladen braucht das Dashboard einmalig deinen GitHub-Token.
+			Er wird nur in diesem Browser gespeichert (${localStorage.getItem('gh_token') ? 'aktuell hinterlegt ✓' : 'noch keiner hinterlegt'}).</p>`));
+		const change = el('<button class="btn">Token eingeben / ändern</button>');
+		change.onclick = () => { ghToken(true); renderTab(); };
+		const clear = el('<button class="btn ghost" style="margin-left:8px">Token aus Browser löschen</button>');
+		clear.onclick = () => { localStorage.removeItem('gh_token'); renderTab(); };
+		tok.appendChild(change);
+		tok.appendChild(clear);
+		m.appendChild(tok);
+	}
 }
 
 // ---------- Speichern ----------
@@ -449,17 +536,23 @@ function setStatus(msg, isError) {
 
 $('#save-btn').addEventListener('click', () => {
 	setStatus('Speichere …');
-	fetch('/save', {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify(content),
-	})
-		.then(r => r.json())
-		.then(res => {
-			if (res.ok) setStatus('Gespeichert ✓');
-			else throw new Error(res.error || 'Unbekannter Fehler');
+	if (IS_LOCAL) {
+		fetch('/save', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(content),
 		})
-		.catch(e => setStatus('Fehler: ' + e.message, true));
+			.then(r => r.json())
+			.then(res => {
+				if (res.ok) setStatus('Gespeichert ✓');
+				else throw new Error(res.error || 'Unbekannter Fehler');
+			})
+			.catch(e => setStatus('Fehler: ' + e.message, true));
+	} else {
+		ghPut('content.json', utf8ToBase64(JSON.stringify(content, null, 2)), 'Update content')
+			.then(() => setStatus('Gespeichert ✓ — Website aktualisiert sich in ~1 Minute'))
+			.catch(e => setStatus('Fehler: ' + e.message, true));
+	}
 });
 </script>
 </body>
