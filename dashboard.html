@@ -171,22 +171,27 @@ function utf8ToBase64(str) {
 }
 
 function safeFilename(name) {
-	const base = name.replace(/\.[^.]*$/, '').toLowerCase()
+	return name.replace(/\.[^.]*$/, '').toLowerCase()
 		.replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss')
 		.replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'bild';
-	return base + '.jpg';
 }
 
-// Bild im Browser auf max. 1920px verkleinern und als JPEG-Base64 zurückgeben
-async function resizeToJpegBase64(file, max = 1920, quality = 0.82) {
+// Bild im Browser verkleinern; bevorzugt WebP (kleinere Dateien),
+// Fallback JPEG falls der Browser kein WebP erzeugen kann (z. B. älteres Safari)
+async function resizeToBase64(file, max, quality) {
 	const bmp = await createImageBitmap(file);
 	const scale = Math.min(1, max / Math.max(bmp.width, bmp.height));
 	const canvas = document.createElement('canvas');
 	canvas.width = Math.round(bmp.width * scale);
 	canvas.height = Math.round(bmp.height * scale);
 	canvas.getContext('2d').drawImage(bmp, 0, 0, canvas.width, canvas.height);
-	const dataUrl = canvas.toDataURL('image/jpeg', quality);
-	return dataUrl.split(',')[1];
+	let dataUrl = canvas.toDataURL('image/webp', quality);
+	let ext = 'webp';
+	if (!dataUrl.startsWith('data:image/webp')) {
+		dataUrl = canvas.toDataURL('image/jpeg', quality);
+		ext = 'jpg';
+	}
+	return { b64: dataUrl.split(',')[1], ext };
 }
 
 function uploadImages(files, cb, single) {
@@ -194,7 +199,7 @@ function uploadImages(files, cb, single) {
 	if (IS_LOCAL) {
 		const fd = new FormData();
 		[...files].forEach(f => fd.append('file', f));
-		fetch('/upload', { method: 'POST', body: fd })
+		fetch('/upload?webset=1', { method: 'POST', body: fd })
 			.then(r => r.json())
 			.then(res => {
 				if (!res.ok) throw new Error(res.error || 'Upload fehlgeschlagen');
@@ -206,10 +211,13 @@ function uploadImages(files, cb, single) {
 		(async () => {
 			const paths = [];
 			for (const f of files) {
-				const name = Date.now() + '-' + safeFilename(f.name);
-				const b64 = await resizeToJpegBase64(f);
-				await ghPut('images/' + name, b64, 'Upload ' + name);
-				paths.push('images/' + name);
+				const base = Date.now() + '-' + safeFilename(f.name);
+				// Zwei Größen: 1600px (Detail) + 800px (schnelles Laden auf Smartphones)
+				const full = await resizeToBase64(f, 1600, 0.8);
+				const sm = await resizeToBase64(f, 800, 0.75);
+				await ghPut('images/' + base + '.' + full.ext, full.b64, 'Upload ' + base);
+				await ghPut('images/' + base + '-sm.' + sm.ext, sm.b64, 'Upload ' + base + ' (klein)');
+				paths.push('images/' + base + '.' + full.ext);
 			}
 			setStatus('Bilder hochgeladen — Speichern nicht vergessen! (Vorschau ggf. erst nach ~1 Min sichtbar)');
 			cb(paths);

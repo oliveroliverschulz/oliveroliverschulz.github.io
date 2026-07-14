@@ -33,8 +33,18 @@
 			.join('');
 	}
 
-	function imageHtml(src, alt) {
-		return '<img src="' + esc(src) + '" alt="' + esc(alt || '') + '" loading="lazy">';
+	// Bilder mit srcset: zu jedem images/foo.jpg existiert ein images/foo-sm.jpg (800px),
+	// so laden Smartphones nur die kleine Version
+	function imageHtml(src, alt, opts) {
+		opts = opts || {};
+		var srcset = '';
+		if (/^images\//.test(src)) {
+			var sm = src.replace(/\.([a-z0-9]+)$/i, '-sm.$1');
+			srcset = ' srcset="' + esc(sm) + ' 800w, ' + esc(src) + ' 1600w"' +
+				' sizes="' + (opts.sizes || '(max-width: 640px) calc(100vw - 36px), 1052px') + '"';
+		}
+		return '<img src="' + esc(src) + '"' + srcset + ' alt="' + esc(alt || '') + '"' +
+			(opts.eager ? '' : ' loading="lazy"') + '>';
 	}
 
 	// Zwei-Klick-YouTube: erst nach Klick wird youtube-nocookie.com geladen
@@ -106,7 +116,7 @@
 	function renderHome(c) {
 		var h = '';
 		if (c.home.image) {
-			h += '<figure class="home-figure">' + imageHtml(c.home.image, c.home.caption) +
+			h += '<figure class="home-figure">' + imageHtml(c.home.image, c.home.caption, { eager: true }) +
 				(c.home.caption ? '<figcaption class="home-caption">' + esc(c.home.caption) + '</figcaption>' : '') +
 			'</figure>';
 		}
@@ -237,7 +247,7 @@
 	function renderAbout(c) {
 		var a = c.about;
 		var h = '';
-		if (a.portrait) h += '<div class="about-portrait">' + imageHtml(a.portrait, c.site.name) + '</div>';
+		if (a.portrait) h += '<div class="about-portrait">' + imageHtml(a.portrait, c.site.name, { sizes: '(max-width: 640px) calc(100vw - 36px), 380px' }) + '</div>';
 		if (a.intro) h += '<div class="about-text"><strong>' + esc(a.intro) + '</strong></div>';
 		if (a.bio) h += '<div class="about-text">' + esc(a.bio) + '</div>';
 		(a.cv || []).forEach(function (sec) {
