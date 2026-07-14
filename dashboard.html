@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — Oliver Schulz</title>
+<style>
+	* { margin:0; padding:0; box-sizing:border-box; }
+	body { font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; font-size:15px; color:#111; background:#f5f5f5; }
+	header { position:sticky; top:0; z-index:10; background:#000; color:#fff; padding:14px 20px; display:flex; align-items:center; gap:20px; flex-wrap:wrap; }
+	header h1 { font-size:16px; font-weight:700; margin-right:auto; }
+	header a { color:#aaa; font-size:13px; text-decoration:none; }
+	header a:hover { color:#fff; }
+	#save-btn { background:#fff; color:#000; border:0; padding:9px 22px; font:inherit; font-weight:700; cursor:pointer; }
+	#save-btn:hover { background:#ddd; }
+	#save-status { font-size:13px; color:#8f8; }
+	nav.tabs { display:flex; flex-wrap:wrap; gap:2px; background:#222; padding:0 20px; position:sticky; top:53px; z-index:9; }
+	nav.tabs button { background:none; border:0; color:#bbb; padding:10px 14px; font:inherit; font-size:13px; cursor:pointer; }
+	nav.tabs button.active { background:#f5f5f5; color:#000; font-weight:700; }
+	main { max-width:860px; margin:0 auto; padding:24px 20px 80px; }
+	.card { background:#fff; border:1px solid #ddd; padding:18px; margin-bottom:16px; }
+	.card h3 { font-size:14px; margin-bottom:12px; }
+	label { display:block; font-size:12px; color:#666; margin:12px 0 4px; text-transform:uppercase; letter-spacing:.04em; }
+	label:first-child { margin-top:0; }
+	input[type=text], input[type=date], input[type=email], input[type=url], textarea, select {
+		width:100%; padding:8px 10px; font:inherit; border:1px solid #ccc; background:#fff; border-radius:0;
+	}
+	textarea { min-height:90px; resize:vertical; }
+	textarea.tall { min-height:200px; }
+	.row { display:flex; gap:12px; flex-wrap:wrap; }
+	.row > div { flex:1; min-width:160px; }
+	.btn { display:inline-block; background:#000; color:#fff; border:0; padding:8px 16px; font:inherit; font-size:13px; cursor:pointer; margin-top:10px; }
+	.btn:hover { background:#333; }
+	.btn.small { padding:4px 10px; font-size:12px; margin:0; }
+	.btn.ghost { background:#eee; color:#000; }
+	.btn.danger { background:#fff; color:#c00; border:1px solid #c00; }
+	.entry-head { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:6px; }
+	.entry-head strong { margin-right:auto; }
+	.thumbs { display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+	.thumb { position:relative; width:90px; }
+	.thumb img { width:90px; height:68px; object-fit:cover; display:block; border:1px solid #ccc; }
+	.thumb .tools { display:flex; gap:2px; margin-top:2px; }
+	.thumb .tools button { flex:1; border:1px solid #ccc; background:#fff; font-size:11px; cursor:pointer; padding:2px 0; }
+	.video-row { display:flex; gap:8px; align-items:center; margin-top:8px; flex-wrap:wrap; }
+	.video-row input { flex:1; min-width:140px; }
+	.video-row .yid { font-family:monospace; font-size:12px; color:#080; white-space:nowrap; }
+	.hint { font-size:12px; color:#888; margin-top:6px; line-height:1.5; }
+	.hint a { color:#555; }
+	.collapsed .entry-body { display:none; }
+	.drop { border:1px dashed #bbb; padding:10px; text-align:center; font-size:12px; color:#888; margin-top:8px; cursor:pointer; }
+	.drop:hover { border-color:#000; color:#000; }
+	h2.tab-title { font-size:18px; margin-bottom:16px; }
+</style>
+</head>
+<body>
+
+<header>
+	<h1>Oliver Schulz — Dashboard</h1>
+	<a href="index.html" target="_blank">Website ansehen ↗</a>
+	<span id="save-status"></span>
+	<button id="save-btn">Speichern</button>
+</header>
+
+<nav class="tabs" id="tabs"></nav>
+<main id="main"></main>
+
+<script>
+'use strict';
+
+let content = null;
+let activeTab = 'startseite';
+const TABS = [
+	['startseite', 'Startseite'],
+	['exhibitions', 'Exhibitions'],
+	['projects', 'Projects'],
+	['about', 'About'],
+	['contact', 'Contact'],
+	['newsletter', 'Newsletter'],
+	['rechtliches', 'Rechtliches'],
+	['einstellungen', 'Einstellungen'],
+];
+
+const $ = sel => document.querySelector(sel);
+
+fetch('content.json?v=' + Date.now()).then(r => r.json()).then(c => {
+	content = c;
+	renderTabs();
+	renderTab();
+});
+
+// ---------- Grundgerüst ----------
+
+function renderTabs() {
+	$('#tabs').innerHTML = TABS.map(([id, label]) =>
+		`<button data-tab="${id}" class="${id === activeTab ? 'active' : ''}">${label}</button>`).join('');
+	$('#tabs').querySelectorAll('button').forEach(b =>
+		b.addEventListener('click', () => { activeTab = b.dataset.tab; renderTabs(); renderTab(); }));
+}
+
+function renderTab() {
+	const m = $('#main');
+	m.innerHTML = '';
+	({
+		startseite: renderStartseite,
+		exhibitions: renderExhibitions,
+		projects: renderProjects,
+		about: renderAbout,
+		contact: renderContact,
+		newsletter: renderNewsletter,
+		rechtliches: renderRechtliches,
+		einstellungen: renderEinstellungen,
+	})[activeTab](m);
+}
+
+// ---------- Bausteine ----------
+
+function el(html) {
+	const t = document.createElement('template');
+	t.innerHTML = html.trim();
+	return t.content.firstChild;
+}
+
+function field(labelText, value, onChange, opts = {}) {
+	const tag = opts.textarea ? 'textarea' : 'input';
+	const node = el(`<div><label>${labelText}</label><${tag} ${opts.textarea ? '' : `type="${opts.type || 'text'}"`} ${opts.tall ? 'class="tall"' : ''}></${tag}></div>`);
+	const input = node.querySelector(tag);
+	input.value = value || '';
+	input.addEventListener('input', () => onChange(input.value));
+	return node;
+}
+
+function uploadImages(files, cb, single) {
+	const fd = new FormData();
+	[...files].forEach(f => fd.append('file', f));
+	setStatus('Lade Bilder hoch …');
+	fetch('/upload', { method: 'POST', body: fd })
+		.then(r => r.json())
+		.then(res => {
+			if (!res.ok) throw new Error(res.error || 'Upload fehlgeschlagen');
+			setStatus('Bilder hochgeladen — Speichern nicht vergessen!');
+			cb(res.paths.map(p => p.path));
+		})
+		.catch(e => setStatus('Fehler: ' + e.message, true));
+}
+
+function imageManager(list, onChange, opts = {}) {
+	// list: Array von Bildpfaden (wird direkt mutiert)
+	const wrap = el('<div></div>');
+	const render = () => {
+		wrap.innerHTML = '';
+		const thumbs = el('<div class="thumbs"></div>');
+		list.forEach((src, i) => {
+			const t = el(`<div class="thumb"><img src="${src}"><div class="tools">
+				<button title="nach vorn">←</button><button title="nach hinten">→</button><button title="entfernen">✕</button>
+			</div></div>`);
+			const [left, right, del] = t.querySelectorAll('button');
+			left.onclick = () => { if (i > 0) { list.splice(i - 1, 0, list.splice(i, 1)[0]); render(); onChange(); } };
+			right.onclick = () => { if (i < list.length - 1) { list.splice(i + 1, 0, list.splice(i, 1)[0]); render(); onChange(); } };
+			del.onclick = () => { list.splice(i, 1); render(); onChange(); };
+			thumbs.appendChild(t);
+		});
+		wrap.appendChild(thumbs);
+		const drop = el(`<div class="drop">${opts.single ? 'Bild' : 'Bilder'} hier ablegen oder klicken zum Auswählen</div>`);
+		const fileInput = el(`<input type="file" accept="image/*" ${opts.single ? '' : 'multiple'} style="display:none">`);
+		drop.onclick = () => fileInput.click();
+		drop.ondragover = e => { e.preventDefault(); drop.style.borderColor = '#000'; };
+		drop.ondragleave = () => drop.style.borderColor = '#bbb';
+		drop.ondrop = e => { e.preventDefault(); handle(e.dataTransfer.files); };
+		fileInput.onchange = () => handle(fileInput.files);
+		const handle = files => uploadImages(files, paths => {
+			if (opts.single) list.length = 0;
+			list.push(...paths);
+			render(); onChange();
+		});
+		wrap.appendChild(drop);
+		wrap.appendChild(fileInput);
+	};
+	render();
+	return wrap;
+}
+
+function extractYoutubeId(input) {
+	input = (input || '').trim();
+	const m = input.match(/(?:youtube\.com\/(?:watch\?.*v=|shorts\/|embed\/|live\/)|youtu\.be\/)([\w-]{11})/) ||
+		input.match(/^([\w-]{11})$/);
+	return m ? m[1] : '';
+}
+
+function videoManager(list, onChange) {
+	const wrap = el('<div><label>YouTube-Videos</label></div>');
+	const render = () => {
+		wrap.querySelectorAll('.video-row, .drop').forEach(n => n.remove());
+		list.forEach((v, i) => {
+			const row = el(`<div class="video-row">
+				<input type="text" placeholder="Titel (optional)" value="">
+				<span class="yid">${v.youtube_id}</span>
+				<button class="btn small danger">✕</button>
+			</div>`);
+			const title = row.querySelector('input');
+			title.value = v.title || '';
+			title.addEventListener('input', () => { v.title = title.value; onChange(); });
+			row.querySelector('.danger').onclick = () => { list.splice(i, 1); render(); onChange(); };
+			wrap.appendChild(row);
+		});
+		const add = el('<div class="video-row"><input type="text" placeholder="YouTube-Link oder Video-ID einfügen …"><button class="btn small">Hinzufügen</button></div>');
+		const input = add.querySelector('input');
+		add.querySelector('button').onclick = () => {
+			const id = extractYoutubeId(input.value);
+			if (!id) { setStatus('Kein gültiger YouTube-Link', true); return; }
+			list.push({ youtube_id: id, title: '' });
+			input.value = '';
+			render(); onChange();
+			setStatus('Video hinzugefügt (ID: ' + id + ')');
+		};
+		wrap.appendChild(add);
+	};
+	render();
+	return wrap;
+}
+
+function noop() {}
+
+// ---------- Tabs ----------
+
+function renderStartseite(m) {
+	m.appendChild(el('<h2 class="tab-title">Startseite</h2>'));
+	const card = el('<div class="card"></div>');
+	card.appendChild(el('<label>Großes Bild</label>'));
+	const imgList = content.home.image ? [content.home.image] : [];
+	card.appendChild(imageManager(imgList, () => { content.home.image = imgList[0] || ''; }, { single: true }));
+	card.appendChild(field('Bildunterschrift', content.home.caption, v => content.home.caption = v));
+	card.appendChild(field('Optionaler Text darunter', content.home.text, v => content.home.text = v, { textarea: true }));
+	m.appendChild(card);
+}
+
+function entryCard(title, bodyBuilder, onDelete, onMove) {
+	const card = el(`<div class="card collapsed">
+		<div class="entry-head">
+			<button class="btn small ghost toggle">▸</button>
+			<strong></strong>
+			<button class="btn small ghost up">↑</button>
+			<button class="btn small ghost down">↓</button>
+			<button class="btn small danger">Löschen</button>
+		</div>
+		<div class="entry-body"></div>
+	</div>`);
+	card.querySelector('strong').textContent = title || '(ohne Titel)';
+	const toggle = card.querySelector('.toggle');
+	toggle.onclick = () => {
+		card.classList.toggle('collapsed');
+		toggle.textContent = card.classList.contains('collapsed') ? '▸' : '▾';
+	};
+	card.querySelector('.danger').onclick = () => {
+		if (confirm('Diesen Eintrag wirklich löschen?')) onDelete();
+	};
+	card.querySelector('.up').onclick = () => onMove(-1);
+	card.querySelector('.down').onclick = () => onMove(1);
+	bodyBuilder(card.querySelector('.entry-body'));
+	return card;
+}
+
+function renderExhibitions(m) {
+	m.appendChild(el('<h2 class="tab-title">Exhibitions</h2>'));
+	m.appendChild(el('<p class="hint">„Upcoming“-Einträge erscheinen oben auf der Seite, „Past“ darunter. Sortierung erfolgt automatisch nach Datum.</p>'));
+	const addBtn = el('<button class="btn">+ Neue Ausstellung</button>');
+	addBtn.onclick = () => {
+		content.exhibitions.unshift({
+			id: 'ex-' + Date.now(), status: 'upcoming', venue: '', city: '', title: '',
+			info: '', date: '', dateText: '', text: '', images: [], videos: [],
+		});
+		renderTab();
+	};
+	m.appendChild(addBtn);
+	content.exhibitions.forEach((ex, i) => {
+		m.appendChild(entryCard(
+			(ex.venue || '(ohne Ort)') + (ex.title ? ' — ' + ex.title : '') + '  [' + ex.status + ']',
+			body => {
+				const statusSel = el(`<div><label>Status</label><select>
+					<option value="upcoming">Upcoming (bevorstehend)</option>
+					<option value="past">Past (vergangen)</option>
+				</select></div>`);
+				statusSel.querySelector('select').value = ex.status;
+				statusSel.querySelector('select').onchange = e => ex.status = e.target.value;
+				body.appendChild(statusSel);
+				const row1 = el('<div class="row"></div>');
+				row1.appendChild(field('Ort / Institution', ex.venue, v => ex.venue = v));
+				row1.appendChild(field('Stadt, Land', ex.city, v => ex.city = v));
+				body.appendChild(row1);
+				body.appendChild(field('Titel der Ausstellung', ex.title, v => ex.title = v));
+				body.appendChild(field('Info (Künstler, Kurator … — Zeilenumbrüche bleiben erhalten)', ex.info, v => ex.info = v, { textarea: true }));
+				const row2 = el('<div class="row"></div>');
+				row2.appendChild(field('Datum (für Sortierung)', ex.date, v => ex.date = v, { type: 'date' }));
+				row2.appendChild(field('Datum als Text (z. B. „Opening Saturday, …“)', ex.dateText, v => ex.dateText = v));
+				body.appendChild(row2);
+				body.appendChild(field('Optionaler Beschreibungstext', ex.text, v => ex.text = v, { textarea: true }));
+				body.appendChild(el('<label>Bilder (erstes Bild = Hauptbild)</label>'));
+				body.appendChild(imageManager(ex.images, noop));
+				body.appendChild(videoManager(ex.videos, noop));
+			},
+			() => { content.exhibitions.splice(i, 1); renderTab(); },
+			dir => {
+				const j = i + dir;
+				if (j < 0 || j >= content.exhibitions.length) return;
+				[content.exhibitions[i], content.exhibitions[j]] = [content.exhibitions[j], content.exhibitions[i]];
+				renderTab();
+			}
+		));
+	});
+}
+
+function slugify(s) {
+	return s.toLowerCase().replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss')
+		.replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'projekt';
+}
+
+function renderProjects(m) {
+	m.appendChild(el('<h2 class="tab-title">Projects</h2>'));
+	m.appendChild(el('<p class="hint">Jedes Projekt bekommt automatisch eine eigene Unterseite (project.html?p=…). Reihenfolge hier = Reihenfolge auf der Seite.</p>'));
+	const addBtn = el('<button class="btn">+ Neues Projekt</button>');
+	addBtn.onclick = () => {
+		content.projects.unshift({
+			slug: 'projekt-' + Date.now(), title: '', year: '', cover: '',
+			teaser: '', text: '', images: [], videos: [],
+		});
+		renderTab();
+	};
+	m.appendChild(addBtn);
+	content.projects.forEach((p, i) => {
+		m.appendChild(entryCard(
+			(p.title || '(ohne Titel)') + (p.year ? ' (' + p.year + ')' : ''),
+			body => {
+				const row = el('<div class="row"></div>');
+				const titleField = field('Titel', p.title, v => {
+					p.title = v;
+					p.slug = slugify(v);
+				});
+				row.appendChild(titleField);
+				row.appendChild(field('Jahr', p.year, v => p.year = v));
+				body.appendChild(row);
+				body.appendChild(field('Kurztext (in der Übersicht)', p.teaser, v => p.teaser = v, { textarea: true }));
+				body.appendChild(el('<label>Titelbild</label>'));
+				const coverList = p.cover ? [p.cover] : [];
+				body.appendChild(imageManager(coverList, () => p.cover = coverList[0] || '', { single: true }));
+				body.appendChild(field('Ausführlicher Text (Unterseite; Leerzeile = neuer Absatz)', p.text, v => p.text = v, { textarea: true, tall: true }));
+				body.appendChild(el('<label>Weitere Bilder (Unterseite)</label>'));
+				body.appendChild(imageManager(p.images, noop));
+				body.appendChild(videoManager(p.videos, noop));
+				body.appendChild(el(`<p class="hint">Vorschau: <a href="project.html?p=${p.slug}" target="_blank">project.html?p=${p.slug}</a></p>`));
+			},
+			() => { content.projects.splice(i, 1); renderTab(); },
+			dir => {
+				const j = i + dir;
+				if (j < 0 || j >= content.projects.length) return;
+				[content.projects[i], content.projects[j]] = [content.projects[j], content.projects[i]];
+				renderTab();
+			}
+		));
+	});
+}
+
+function renderAbout(m) {
+	m.appendChild(el('<h2 class="tab-title">About</h2>'));
+	const card = el('<div class="card"></div>');
+	card.appendChild(el('<label>Porträtfoto</label>'));
+	const pList = content.about.portrait ? [content.about.portrait] : [];
+	card.appendChild(imageManager(pList, () => content.about.portrait = pList[0] || '', { single: true }));
+	card.appendChild(field('Einleitung (fett dargestellt)', content.about.intro, v => content.about.intro = v, { textarea: true }));
+	card.appendChild(field('Biografie', content.about.bio, v => content.about.bio = v, { textarea: true, tall: true }));
+	m.appendChild(card);
+
+	m.appendChild(el('<h2 class="tab-title" style="margin-top:24px">CV-Abschnitte</h2>'));
+	const addBtn = el('<button class="btn">+ Neuer Abschnitt</button>');
+	addBtn.onclick = () => { content.about.cv.push({ section: 'Neuer Abschnitt', items: [] }); renderTab(); };
+	m.appendChild(addBtn);
+	content.about.cv.forEach((sec, i) => {
+		const card = el('<div class="card"></div>');
+		const head = el('<div class="entry-head"><strong></strong><button class="btn small ghost up">↑</button><button class="btn small ghost down">↓</button><button class="btn small danger">Löschen</button></div>');
+		head.querySelector('strong').textContent = sec.section;
+		head.querySelector('.danger').onclick = () => { if (confirm('Abschnitt löschen?')) { content.about.cv.splice(i, 1); renderTab(); } };
+		head.querySelector('.up').onclick = () => { if (i > 0) { [content.about.cv[i - 1], content.about.cv[i]] = [content.about.cv[i], content.about.cv[i - 1]]; renderTab(); } };
+		head.querySelector('.down').onclick = () => { if (i < content.about.cv.length - 1) { [content.about.cv[i + 1], content.about.cv[i]] = [content.about.cv[i], content.about.cv[i + 1]]; renderTab(); } };
+		card.appendChild(head);
+		card.appendChild(field('Überschrift', sec.section, v => sec.section = v));
+		card.appendChild(field('Einträge (eine Zeile = ein Eintrag)', sec.items.join('\n'),
+			v => sec.items = v.split('\n').filter(s => s.trim()), { textarea: true }));
+		m.appendChild(card);
+	});
+}
+
+function renderContact(m) {
+	m.appendChild(el('<h2 class="tab-title">Contact</h2>'));
+	m.appendChild(el('<p class="hint">Erscheint auf der Contact-Seite und im Kontaktbereich der About-Seite.</p>'));
+	const card = el('<div class="card"></div>');
+	const ct = content.contact;
+	card.appendChild(field('Einleitungstext', ct.text, v => ct.text = v, { textarea: true }));
+	card.appendChild(field('E-Mail', ct.email, v => ct.email = v, { type: 'email' }));
+	card.appendChild(field('Telefon (optional)', ct.phone, v => ct.phone = v));
+	card.appendChild(field('Adresse / Atelier (optional)', ct.address, v => ct.address = v));
+	card.appendChild(field('Instagram-Link (optional)', ct.instagram, v => ct.instagram = v, { type: 'url' }));
+	m.appendChild(card);
+}
+
+function renderNewsletter(m) {
+	m.appendChild(el('<h2 class="tab-title">Newsletter</h2>'));
+	const card = el('<div class="card"></div>');
+	const n = content.newsletter;
+	card.appendChild(field('Überschrift', n.heading, v => n.heading = v));
+	card.appendChild(field('Beschreibungstext', n.text, v => n.text = v, { textarea: true }));
+	card.appendChild(field('Brevo Formular-Action-URL (leer = Anmeldung per E-Mail)', n.action_url, v => n.action_url = v, { type: 'url' }));
+	card.appendChild(el(`<p class="hint">
+		<strong>Einrichtung später (wenn Zugänge da sind):</strong><br>
+		1. Kostenloses Konto bei <a href="https://www.brevo.com/de/" target="_blank">brevo.com</a> anlegen (EU-Anbieter, DSGVO-konform).<br>
+		2. Unter „Kontakte → Formulare“ ein Anmeldeformular mit Double-Opt-in erstellen.<br>
+		3. Im Formular-Code die <code>action="…"</code>-URL kopieren und oben einfügen.<br>
+		Solange das Feld leer ist, zeigt die Website stattdessen einen „Subscribe by e-mail“-Link.
+	</p>`));
+	m.appendChild(card);
+}
+
+function renderRechtliches(m) {
+	m.appendChild(el('<h2 class="tab-title">Rechtliches</h2>'));
+	const card1 = el('<div class="card"></div>');
+	card1.appendChild(field('Impressum', content.legal.impressum, v => content.legal.impressum = v, { textarea: true, tall: true }));
+	m.appendChild(card1);
+	const card2 = el('<div class="card"></div>');
+	card2.appendChild(field('Datenschutzerklärung', content.legal.datenschutz, v => content.legal.datenschutz = v, { textarea: true, tall: true }));
+	m.appendChild(card2);
+}
+
+function renderEinstellungen(m) {
+	m.appendChild(el('<h2 class="tab-title">Einstellungen</h2>'));
+	const card = el('<div class="card"></div>');
+	const s = content.site;
+	card.appendChild(field('Name (Seitentitel & Logo)', s.name, v => s.name = v));
+	card.appendChild(field('Domain', s.domain, v => s.domain = v));
+	card.appendChild(field('Zentrale E-Mail-Adresse', s.email, v => s.email = v, { type: 'email' }));
+	card.appendChild(field('Beschreibung (für Suchmaschinen)', s.description, v => s.description = v, { textarea: true }));
+	m.appendChild(card);
+}
+
+// ---------- Speichern ----------
+
+function setStatus(msg, isError) {
+	const st = $('#save-status');
+	st.textContent = msg;
+	st.style.color = isError ? '#f88' : '#8f8';
+	if (!isError) setTimeout(() => { if (st.textContent === msg) st.textContent = ''; }, 4000);
+}
+
+$('#save-btn').addEventListener('click', () => {
+	setStatus('Speichere …');
+	fetch('/save', {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify(content),
+	})
+		.then(r => r.json())
+		.then(res => {
+			if (res.ok) setStatus('Gespeichert ✓');
+			else throw new Error(res.error || 'Unbekannter Fehler');
+		})
+		.catch(e => setStatus('Fehler: ' + e.message, true));
+});
+</script>
+</body>
+</html>

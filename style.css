@@ -1,0 +1,221 @@
+/* Oliver Schulz — plain white, no effects (nach dem Vorbild jaygard.de) */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 16px;
+	line-height: 1.5;
+	color: #000;
+	background: #fff;
+}
+
+img { display: block; max-width: 100%; height: auto; }
+
+a { color: #000; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ---------- Header ---------- */
+
+.site-header { padding: 28px 24px 20px; }
+
+.header-inner {
+	max-width: 1100px;
+	margin: 0 auto;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 8px 24px;
+}
+
+.site-title {
+	font-size: 22px;
+	font-weight: 700;
+	letter-spacing: 0.01em;
+}
+.site-title:hover { text-decoration: none; }
+
+.site-nav { display: flex; flex-wrap: wrap; gap: 4px 22px; }
+
+.site-nav a { font-size: 16px; color: #000; }
+.site-nav a:hover { text-decoration: underline; }
+.site-nav a.active { text-decoration: underline; text-underline-offset: 3px; }
+
+/* ---------- Main ---------- */
+
+.site-main {
+	max-width: 1100px;
+	margin: 0 auto;
+	padding: 24px 24px 60px;
+	min-height: 60vh;
+}
+
+.text-col { max-width: 720px; }
+
+h1, h2, h3 { font-weight: 700; line-height: 1.3; }
+
+.section-heading {
+	font-size: 16px;
+	font-weight: 700;
+	margin: 48px 0 24px;
+	text-transform: none;
+}
+.section-heading:first-child { margin-top: 8px; }
+
+p { margin-bottom: 1em; }
+
+/* ---------- Home ---------- */
+
+.home-figure { margin: 8px 0 0; }
+.home-figure img { width: 100%; }
+.home-caption { font-size: 14px; color: #666; margin-top: 10px; }
+
+/* ---------- Entry list (Exhibitions / Projects) ---------- */
+
+.entry { margin-bottom: 72px; }
+.entry:last-child { margin-bottom: 0; }
+
+.entry-image { margin-bottom: 18px; }
+.entry-image img { width: 100%; }
+
+.entry-venue { font-size: 16px; font-weight: 700; }
+.entry-title { font-size: 16px; font-style: italic; font-weight: 400; }
+.entry-info { font-size: 16px; white-space: pre-line; }
+.entry-date { font-size: 16px; color: #666; margin-top: 4px; }
+.entry-text { max-width: 720px; margin-top: 12px; }
+
+.entry-gallery { margin-top: 18px; display: grid; gap: 18px; }
+
+.entry-more { display: inline-block; margin-top: 10px; text-decoration: underline; text-underline-offset: 3px; }
+
+/* ---------- Project detail ---------- */
+
+.project-head { margin-bottom: 24px; }
+.project-head h1 { font-size: 22px; }
+.project-year { color: #666; }
+.project-text { max-width: 720px; margin: 18px 0 30px; }
+.project-gallery { display: grid; gap: 24px; }
+.back-link { display: inline-block; margin-bottom: 28px; }
+
+/* ---------- Video (Zwei-Klick / two-click embed) ---------- */
+
+.video-block { margin-top: 18px; }
+
+.video-placeholder {
+	position: relative;
+	width: 100%;
+	aspect-ratio: 16 / 9;
+	background: #f2f2f2;
+	border: 1px solid #ddd;
+	cursor: pointer;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 12px;
+	text-align: center;
+	padding: 20px;
+}
+
+.video-placeholder .play {
+	width: 0; height: 0;
+	border-top: 16px solid transparent;
+	border-bottom: 16px solid transparent;
+	border-left: 26px solid #000;
+}
+
+.video-placeholder .video-title { font-weight: 700; }
+
+.video-placeholder .video-note { font-size: 13px; color: #666; max-width: 420px; }
+
+.video-block iframe {
+	width: 100%;
+	aspect-ratio: 16 / 9;
+	border: 0;
+	display: block;
+}
+
+.video-caption { font-size: 14px; color: #666; margin-top: 8px; }
+
+/* ---------- About ---------- */
+
+.about-portrait { max-width: 380px; margin-bottom: 28px; }
+.about-text { max-width: 720px; white-space: pre-line; margin-bottom: 40px; }
+
+.cv-section { max-width: 720px; margin-bottom: 32px; }
+.cv-section h2 { font-size: 16px; margin-bottom: 10px; }
+.cv-section ul { list-style: none; }
+.cv-section li { margin-bottom: 4px; }
+
+/* ---------- Contact / Newsletter ---------- */
+
+.contact-block { max-width: 720px; margin-bottom: 40px; white-space: pre-line; }
+.contact-block a { text-decoration: underline; text-underline-offset: 3px; }
+
+.newsletter-block {
+	max-width: 480px;
+	margin-top: 8px;
+	padding-top: 32px;
+	border-top: 1px solid #ddd;
+}
+.newsletter-block h2 { font-size: 16px; margin-bottom: 10px; }
+.newsletter-block p { font-size: 15px; color: #333; }
+
+.newsletter-form { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+
+.newsletter-form input[type="email"] {
+	flex: 1;
+	min-width: 220px;
+	padding: 10px 12px;
+	font: inherit;
+	border: 1px solid #000;
+	background: #fff;
+	border-radius: 0;
+}
+
+.newsletter-form button {
+	padding: 10px 20px;
+	font: inherit;
+	border: 1px solid #000;
+	background: #fff;
+	color: #000;
+	cursor: pointer;
+	border-radius: 0;
+}
+.newsletter-form button:hover { background: #000; color: #fff; }
+
+.newsletter-hint { font-size: 13px; color: #666; margin-top: 10px; }
+
+/* ---------- Legal ---------- */
+
+.legal-text { max-width: 720px; white-space: pre-line; }
+.legal-text h1 { font-size: 18px; margin-bottom: 20px; }
+
+/* ---------- Footer ---------- */
+
+.site-footer {
+	max-width: 1100px;
+	margin: 0 auto;
+	padding: 24px;
+	font-size: 13px;
+	color: #666;
+	border-top: 1px solid #eee;
+}
+.site-footer a { color: #666; }
+.site-footer p { margin: 0; }
+
+/* ---------- Mobile ---------- */
+
+@media (max-width: 640px) {
+	.site-header { padding: 20px 18px 14px; }
+	.header-inner { flex-direction: column; align-items: flex-start; }
+	.site-title { font-size: 20px; }
+	.site-nav { gap: 4px 16px; }
+	.site-nav a { font-size: 15px; }
+	.site-main { padding: 16px 18px 48px; }
+	.entry { margin-bottom: 56px; }
+	.site-footer { padding: 20px 18px; }
+}

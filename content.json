@@ -1,0 +1,155 @@
+{
+  "site": {
+    "name": "Oliver Schulz",
+    "domain": "oschulz.com",
+    "email": "mail@oschulz.com",
+    "description": "Oliver Schulz — visual artist. Exhibitions, projects and works."
+  },
+  "home": {
+    "image": "images/home.jpg",
+    "caption": "Lorem Ipsum Dolor, 2026 — mixed media on canvas",
+    "text": ""
+  },
+  "exhibitions": [
+    {
+      "id": "kunsthalle-lorem-2026",
+      "status": "upcoming",
+      "venue": "Kunsthalle Lorem",
+      "city": "Berlin, Germany",
+      "title": "Ipsum Dolor Sit Amet",
+      "info": "Group exhibition with Anna Muster, Karl Beispiel and Oliver Schulz\nCurated by Maria Exempla",
+      "date": "2026-09-12",
+      "dateText": "Opening Saturday, September 12, 2026",
+      "text": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.",
+      "images": ["images/ex1-1.jpg", "images/ex1-2.jpg", "images/ex1-3.jpg"],
+      "videos": []
+    },
+    {
+      "id": "galerie-consectetur-2026",
+      "status": "past",
+      "venue": "Galerie Consectetur",
+      "city": "Leipzig, Germany",
+      "title": "Tempor Invidunt",
+      "info": "Solo exhibition",
+      "date": "2026-03-20",
+      "dateText": "March 20 — May 2, 2026",
+      "text": "At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est lorem ipsum dolor sit amet.",
+      "images": ["images/ex2-1.jpg", "images/ex2-2.jpg"],
+      "videos": [
+        { "youtube_id": "dQw4w9WgXcQ", "title": "Exhibition walkthrough" }
+      ]
+    },
+    {
+      "id": "kunstverein-sadipscing-2025",
+      "status": "past",
+      "venue": "Kunstverein Sadipscing",
+      "city": "Hamburg, Germany",
+      "title": "Magna Aliquyam",
+      "info": "With works by Oliver Schulz and Lena Lorem\nCurated by Jonas Ipsum",
+      "date": "2025-10-04",
+      "dateText": "October 4 — November 30, 2025",
+      "text": "",
+      "images": ["images/ex3-1.jpg", "images/ex3-2.jpg", "images/ex3-3.jpg"],
+      "videos": []
+    }
+  ],
+  "projects": [
+    {
+      "slug": "lorem-ipsum",
+      "title": "Lorem Ipsum",
+      "year": "2026",
+      "cover": "images/pr1-1.jpg",
+      "teaser": "A series of large-scale works exploring lorem ipsum dolor sit amet, consetetur sadipscing elitr.",
+      "text": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.\n\nStet clita kasd gubergren, no sea takimata sanctus est lorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan.\n\nUt wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.",
+      "images": ["images/pr1-2.jpg", "images/pr1-3.jpg"],
+      "videos": [
+        { "youtube_id": "dQw4w9WgXcQ", "title": "Studio documentation" }
+      ]
+    },
+    {
+      "slug": "dolor-sit-amet",
+      "title": "Dolor Sit Amet",
+      "year": "2025",
+      "cover": "images/pr2-1.jpg",
+      "teaser": "Sculptural interventions in public space, sed diam nonumy eirmod tempor invidunt.",
+      "text": "Sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est.\n\nNam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum.",
+      "images": ["images/pr2-2.jpg"],
+      "videos": []
+    },
+    {
+      "slug": "consetetur",
+      "title": "Consetetur",
+      "year": "2024",
+      "cover": "images/pr3-1.jpg",
+      "teaser": "Photographic studies of light and material, at vero eos et accusam et justo duo dolores.",
+      "text": "At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est lorem ipsum dolor sit amet.\n\nLorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat.",
+      "images": ["images/pr3-2.jpg", "images/pr3-3.jpg"],
+      "videos": []
+    },
+    {
+      "slug": "sadipscing-elitr",
+      "title": "Sadipscing Elitr",
+      "year": "2022",
+      "cover": "images/pr4-1.jpg",
+      "teaser": "An ongoing archive of found materials and drawings.",
+      "text": "Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis.\n\nAt vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.",
+      "images": ["images/pr4-2.jpg"],
+      "videos": []
+    }
+  ],
+  "about": {
+    "portrait": "images/portrait.jpg",
+    "intro": "Oliver Schulz is a visual artist based in Germany. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat.",
+    "bio": "Born in Lorem, Germany. Studied fine arts at the Ipsum Academy, Dolor. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.\n\nAt vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est lorem ipsum dolor sit amet. Lives and works in Berlin.",
+    "cv": [
+      {
+        "section": "Education",
+        "items": [
+          "2008–2014 Ipsum Academy of Fine Arts, Dolor — Diploma",
+          "2014–2015 Meisterschüler, class of Prof. Lorem Amet"
+        ]
+      },
+      {
+        "section": "Awards & Grants",
+        "items": [
+          "2024 Lorem Ipsum Stipendium, Berlin",
+          "2021 Dolor Sit Art Prize, Hamburg",
+          "2018 Consetetur Grant for Young Artists"
+        ]
+      },
+      {
+        "section": "Selected Solo Exhibitions",
+        "items": [
+          "2026 Tempor Invidunt, Galerie Consectetur, Leipzig",
+          "2024 Eirmod Tempor, Kunstraum Lorem, Munich",
+          "2022 Voluptua, Galerie Ipsum, Berlin"
+        ]
+      },
+      {
+        "section": "Selected Group Exhibitions",
+        "items": [
+          "2026 Ipsum Dolor Sit Amet, Kunsthalle Lorem, Berlin",
+          "2025 Magna Aliquyam, Kunstverein Sadipscing, Hamburg",
+          "2023 Stet Clita, Museum Kasd, Cologne"
+        ]
+      }
+    ]
+  },
+  "newsletter": {
+    "provider": "brevo",
+    "action_url": "",
+    "heading": "Newsletter",
+    "text": "Sign up to receive occasional news about exhibitions and new projects. No tracking, unsubscribe anytime."
+  },
+  "contact": {
+    "email": "mail@oschulz.com",
+    "phone": "",
+    "address": "Studio: Lorem Str. 12, 10999 Berlin",
+    "instagram": "",
+    "text": "For inquiries about works, exhibitions or collaborations please get in touch by e-mail."
+  },
+  "legal": {
+    "impressum": "Angaben gemäß § 5 TMG\n\nOliver Schulz\nLorem Str. 12\n10999 Berlin\n\nKontakt:\nE-Mail: mail@oschulz.com\n\nVerantwortlich für den Inhalt nach § 55 Abs. 2 RStV:\nOliver Schulz, Anschrift wie oben.\n\nHaftung für Links:\nUnser Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte wir keinen Einfluss haben. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich.",
+    "datenschutz": "Datenschutzerklärung\n\n1. Allgemeines\nDiese Website verzichtet vollständig auf Tracking, Analyse-Dienste, Werbenetzwerke und Cookies. Beim Besuch der Website werden keine personenbezogenen Daten durch uns gespeichert.\n\n2. Hosting\nDiese Website wird bei GitHub Pages (GitHub Inc.) gehostet. Beim Aufruf der Seite verarbeitet der Hoster technisch notwendige Daten (z. B. IP-Adresse) in Server-Logfiles zur Bereitstellung und Sicherheit des Dienstes. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO.\n\n3. YouTube-Videos (Zwei-Klick-Lösung)\nEingebettete Videos werden erst geladen, nachdem Sie aktiv auf das Vorschaufeld geklickt haben. Erst dann wird eine Verbindung zu YouTube (Google Ireland Ltd.) über die datenschutzfreundliche Domain youtube-nocookie.com hergestellt. Vor dem Klick werden keine Daten an Google übertragen.\n\n4. Newsletter\nDie Anmeldung zum Newsletter erfolgt über ein Double-Opt-in-Verfahren. Ihre E-Mail-Adresse wird ausschließlich für den Versand des Newsletters verwendet und nicht an Dritte weitergegeben. Sie können sich jederzeit über den Abmeldelink in jeder E-Mail abmelden.\n\n5. Kontakt\nWenn Sie uns per E-Mail kontaktieren, werden Ihre Angaben zur Bearbeitung der Anfrage gespeichert. Diese Daten geben wir nicht ohne Ihre Einwilligung weiter.\n\n6. Ihre Rechte\nSie haben jederzeit das Recht auf Auskunft, Berichtigung, Löschung und Einschränkung der Verarbeitung Ihrer personenbezogenen Daten sowie ein Beschwerderecht bei der zuständigen Aufsichtsbehörde."
+  }
+}
