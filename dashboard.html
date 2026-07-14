@@ -45,6 +45,10 @@
 	.video-row input { flex:1; min-width:140px; }
 	.video-row .yid { font-family:monospace; font-size:12px; color:#080; white-space:nowrap; }
 	.hint { font-size:12px; color:#888; margin-top:6px; line-height:1.5; }
+	.fmt-bar { display:flex; align-items:center; gap:4px; margin-bottom:4px; flex-wrap:wrap; }
+	.fmt-bar button { border:1px solid #ccc; background:#fff; padding:3px 10px; font-size:13px; cursor:pointer; }
+	.fmt-bar button:hover { background:#eee; }
+	.fmt-hint { font-size:11px; color:#aaa; margin-left:6px; }
 	.hint a { color:#555; }
 	.collapsed .entry-body { display:none; }
 	.drop { border:1px dashed #bbb; padding:10px; text-align:center; font-size:12px; color:#888; margin-top:8px; cursor:pointer; }
@@ -140,12 +144,40 @@ function el(html) {
 	return t.content.firstChild;
 }
 
+// Markiertem Text im Feld eine Formatierung umhängen (z. B. **fett**)
+function wrapSelection(input, before, after) {
+	const s = input.selectionStart, e = input.selectionEnd;
+	const sel = input.value.slice(s, e) || 'Text';
+	input.value = input.value.slice(0, s) + before + sel + after + input.value.slice(e);
+	input.focus();
+	input.setSelectionRange(s + before.length, s + before.length + sel.length);
+	input.dispatchEvent(new Event('input'));
+}
+
+function formatToolbar(input) {
+	const bar = el(`<div class="fmt-bar">
+		<button type="button" title="Fett"><b>F</b></button>
+		<button type="button" title="Kursiv"><i>K</i></button>
+		<button type="button" title="Link einfügen">🔗 Link</button>
+		<span class="fmt-hint">Text markieren, dann Knopf klicken — **fett**, *kursiv*, [Text](https://…)</span>
+	</div>`);
+	const [b, i, a] = bar.querySelectorAll('button');
+	b.onclick = () => wrapSelection(input, '**', '**');
+	i.onclick = () => wrapSelection(input, '*', '*');
+	a.onclick = () => {
+		const url = prompt('Link-Adresse (https://… oder mailto:…):', 'https://');
+		if (url && url !== 'https://') wrapSelection(input, '[', '](' + url.trim() + ')');
+	};
+	return bar;
+}
+
 function field(labelText, value, onChange, opts = {}) {
 	const tag = opts.textarea ? 'textarea' : 'input';
 	const node = el(`<div><label>${labelText}</label><${tag} ${opts.textarea ? '' : `type="${opts.type || 'text'}"`} ${opts.tall ? 'class="tall"' : ''}></${tag}></div>`);
 	const input = node.querySelector(tag);
 	input.value = value || '';
 	input.addEventListener('input', () => onChange(input.value));
+	if (opts.textarea && !opts.noFormat) node.insertBefore(formatToolbar(input), input);
 	return node;
 }
 
@@ -552,7 +584,7 @@ function renderEinstellungen(m) {
 	card.appendChild(field('Name (Seitentitel & Logo)', s.name, v => s.name = v));
 	card.appendChild(field('Domain', s.domain, v => s.domain = v));
 	card.appendChild(field('Zentrale E-Mail-Adresse', s.email, v => s.email = v, { type: 'email' }));
-	card.appendChild(field('Beschreibung (für Suchmaschinen)', s.description, v => s.description = v, { textarea: true }));
+	card.appendChild(field('Beschreibung (für Suchmaschinen)', s.description, v => s.description = v, { textarea: true, noFormat: true }));
 	m.appendChild(card);
 
 	if (!IS_LOCAL) {

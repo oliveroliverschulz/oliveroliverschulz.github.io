@@ -27,9 +27,22 @@
 			.replace(/"/g, '&quot;');
 	}
 
+	// Einfache Formatierung in Textfeldern: **fett**, *kursiv*, [Text](https://url),
+	// nackte URLs werden automatisch verlinkt. HTML selbst bleibt escaped (sicher).
+	function fmt(s) {
+		s = esc(s);
+		s = s.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+|mailto:[^\s)]+)\)/g,
+			'<a href="$2" target="_blank" rel="noopener">$1</a>');
+		s = s.replace(/(^|[\s(])((?:https?:\/\/)[^\s<)]+)/g,
+			'$1<a href="$2" target="_blank" rel="noopener">$2</a>');
+		s = s.replace(/\*\*(\S(?:[^*]*\S)?)\*\*/g, '<strong>$1</strong>');
+		s = s.replace(/(^|[^*])\*(\S(?:[^*\n]*\S)?)\*/g, '$1<em>$2</em>');
+		return s;
+	}
+
 	function paragraphs(text) {
 		return String(text || '').split(/\n\s*\n/).filter(Boolean)
-			.map(function (p) { return '<p>' + esc(p).replace(/\n/g, '<br>') + '</p>'; })
+			.map(function (p) { return '<p>' + fmt(p).replace(/\n/g, '<br>') + '</p>'; })
 			.join('');
 	}
 
@@ -117,7 +130,7 @@
 		var h = '';
 		if (c.home.image) {
 			h += '<figure class="home-figure">' + imageHtml(c.home.image, c.home.caption, { eager: true }) +
-				(c.home.caption ? '<figcaption class="home-caption">' + esc(c.home.caption) + '</figcaption>' : '') +
+				(c.home.caption ? '<figcaption class="home-caption">' + fmt(c.home.caption) + '</figcaption>' : '') +
 			'</figure>';
 		}
 		if (c.home.text) h += '<div class="text-col" style="margin-top:28px">' + paragraphs(c.home.text) + '</div>';
@@ -131,7 +144,7 @@
 			(first ? '<div class="entry-image">' + imageHtml(first, ex.title) + '</div>' : '') +
 			'<div class="entry-venue">' + esc(ex.venue) + (ex.city ? ', ' + esc(ex.city) : '') + '</div>' +
 			(ex.title ? '<div class="entry-title">' + esc(ex.title) + '</div>' : '') +
-			(ex.info ? '<div class="entry-info">' + esc(ex.info) + '</div>' : '') +
+			(ex.info ? '<div class="entry-info">' + fmt(ex.info) + '</div>' : '') +
 			(ex.dateText ? '<div class="entry-date">' + esc(ex.dateText) + '</div>' : '') +
 			(ex.text ? '<div class="entry-text">' + paragraphs(ex.text) + '</div>' : '') +
 			mediaHtml(rest) +
@@ -213,7 +226,7 @@
 				'send a short message and you will be added to the list.</p>';
 		}
 		return '<div class="newsletter-block" id="newsletter"><h2>' + esc(n.heading || 'Newsletter') + '</h2>' +
-			(n.text ? '<p>' + esc(n.text) + '</p>' : '') + inner + '</div>';
+			(n.text ? '<p>' + fmt(n.text) + '</p>' : '') + inner + '</div>';
 	}
 
 	// Newsletter-Formular per fetch absenden und Brevo-Antwort inline anzeigen
@@ -248,11 +261,11 @@
 		var a = c.about;
 		var h = '';
 		if (a.portrait) h += '<div class="about-portrait">' + imageHtml(a.portrait, c.site.name, { sizes: '(max-width: 640px) calc(100vw - 36px), 380px' }) + '</div>';
-		if (a.intro) h += '<div class="about-text"><strong>' + esc(a.intro) + '</strong></div>';
-		if (a.bio) h += '<div class="about-text">' + esc(a.bio) + '</div>';
+		if (a.intro) h += '<div class="about-text"><strong>' + fmt(a.intro) + '</strong></div>';
+		if (a.bio) h += '<div class="about-text">' + fmt(a.bio) + '</div>';
 		(a.cv || []).forEach(function (sec) {
 			h += '<div class="cv-section"><h2>' + esc(sec.section) + '</h2><ul>' +
-				sec.items.map(function (i) { return '<li>' + esc(i) + '</li>'; }).join('') +
+				sec.items.map(function (i) { return '<li>' + fmt(i) + '</li>'; }).join('') +
 			'</ul></div>';
 		});
 		h += contactBlockHtml(c);
@@ -263,10 +276,10 @@
 	function contactBlockHtml(c) {
 		var ct = c.contact;
 		var h = '<div class="contact-block"><h2 class="section-heading">Contact</h2>';
-		if (ct.text) h += '<p>' + esc(ct.text) + '</p>';
+		if (ct.text) h += '<p>' + fmt(ct.text) + '</p>';
 		if (ct.email) h += '<p><a href="mailto:' + esc(ct.email) + '">' + esc(ct.email) + '</a></p>';
 		if (ct.phone) h += '<p>' + esc(ct.phone) + '</p>';
-		if (ct.address) h += '<p>' + esc(ct.address) + '</p>';
+		if (ct.address) h += '<p>' + fmt(ct.address) + '</p>';
 		if (ct.instagram) h += '<p><a href="' + esc(ct.instagram) + '" rel="noopener" target="_blank">Instagram</a></p>';
 		h += '</div>';
 		return h;

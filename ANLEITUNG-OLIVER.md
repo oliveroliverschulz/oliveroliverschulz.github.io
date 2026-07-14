@@ -27,6 +27,17 @@ Deine Website bearbeitest du direkt im Browser – ohne Installation.
   Kamera-Fotos direkt hochladen
 - Das erste Bild eines Eintrags ist das Hauptbild; Reihenfolge mit ← → ändern
 
+## Textformatierung
+
+In allen größeren Textfeldern kannst du formatieren: Text markieren und auf
+**F** (fett), **K** (kursiv) oder **🔗 Link** klicken. Oder direkt tippen:
+
+- `**fett**` → **fett**
+- `*kursiv*` → *kursiv*
+- `[Galerie XY](https://galerie-xy.de)` → Link mit eigenem Text
+- Eine Web-Adresse (https://…) einfach einfügen → wird automatisch klickbar
+- Leerzeile = neuer Absatz
+
 ## Wichtig
 
 - **Token geheim halten** – wer ihn hat, kann die Website ändern
