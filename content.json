@@ -69,58 +69,13 @@
   ],
   "projects": [
     {
-      "slug": "lorem-ipsum",
-      "title": "Lorem Ipsum",
-      "year": "2026",
-      "cover": "images/pr1-1.webp",
-      "teaser": "A series of large-scale works exploring lorem ipsum dolor sit amet, consetetur sadipscing elitr.",
-      "text": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.\n\nStet clita kasd gubergren, no sea takimata sanctus est lorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan.\n\nUt wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.",
-      "images": [
-        "images/pr1-2.webp",
-        "images/pr1-3.webp"
-      ],
-      "videos": [
-        {
-          "youtube_id": "dQw4w9WgXcQ",
-          "title": "Studio documentation"
-        }
-      ]
-    },
-    {
-      "slug": "dolor-sit-amet",
-      "title": "Dolor Sit Amet",
-      "year": "2025",
-      "cover": "images/pr2-1.webp",
-      "teaser": "Sculptural interventions in public space, sed diam nonumy eirmod tempor invidunt.",
-      "text": "Sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est.\n\nNam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum.",
-      "images": [
-        "images/pr2-2.webp"
-      ],
-      "videos": []
-    },
-    {
-      "slug": "consetetur",
-      "title": "Consetetur",
-      "year": "2024",
-      "cover": "images/pr3-1.webp",
-      "teaser": "Photographic studies of light and material, at vero eos et accusam et justo duo dolores.",
-      "text": "At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est lorem ipsum dolor sit amet.\n\nLorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat.",
-      "images": [
-        "images/pr3-2.webp",
-        "images/pr3-3.webp"
-      ],
-      "videos": []
-    },
-    {
-      "slug": "sadipscing-elitr",
-      "title": "Sadipscing Elitr",
-      "year": "2022",
-      "cover": "images/pr4-1.webp",
-      "teaser": "An ongoing archive of found materials and drawings.",
-      "text": "Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis.\n\nAt vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.",
-      "images": [
-        "images/pr4-2.webp"
-      ],
+      "slug": "mint-condition",
+      "title": "mint condition",
+      "year": "2025 - ongoing",
+      "cover": "",
+      "teaser": "mint condition is gum scraped off the street, is material in like-new condition, is sculpture, is in public space, is the collective history of materials",
+      "text": "As I observe how casually contemporary art treats our planet in an extractivist manner, I find myself wondering about the most sustainable use of materials. Used chewing gum sticks to sidewalks and streets, waiting for nothing and no one—not even recycling. So the material seemed ideal to me. \n“mint condition,” meaning perfectly new, is the name of this series, since I view used chewing gum as a material in mint condition, as a raw material, and work with it sculpturally. Conveniently, the material gives off a minty scent. A large part of the work involved in mint condition is the process of collecting the gum—spending hours crawling along sidewalks and scraping with a putty knife. In the process, I experience many little stories through encounters with passersby, discovering the sidewalk and urban space at ground level. Flattened, hardened gray chewing gum, as well as freshly spat-out pieces never touched again, those still bearing tooth marks, and those stuck in a street corner where dogs have peed—every piece of gum I collect bears witness to an individual story. Someone made it, bought it, chewed it, and spat it out in this spot. It is populated by all manner of non-human actors. It has a collective story to tell. mint condition attempts to pick up on some of the many loose ends of this material and to reveal parts of its collective material history.",
+      "images": [],
       "videos": []
     }
   ],
