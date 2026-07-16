@@ -10,63 +10,7 @@
     "caption": "mint condition, 2026 — exhibition view",
     "text": ""
   },
-  "exhibitions": [
-    {
-      "id": "kunsthalle-lorem-2026",
-      "status": "upcoming",
-      "venue": "Kunsthalle Lorem",
-      "city": "Berlin, Germany",
-      "title": "Ipsum Dolor Sit Amet",
-      "info": "Group exhibition with Anna Muster, Karl Beispiel and Oliver Schulz\nCurated by Maria Exempla",
-      "date": "2026-09-12",
-      "dateText": "Opening Saturday, September 12, 2026",
-      "text": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.",
-      "images": [
-        "images/ex1-1.webp",
-        "images/ex1-2.webp",
-        "images/ex1-3.webp"
-      ],
-      "videos": []
-    },
-    {
-      "id": "galerie-consectetur-2026",
-      "status": "past",
-      "venue": "Galerie Consectetur",
-      "city": "Leipzig, Germany",
-      "title": "Tempor Invidunt",
-      "info": "Solo exhibition",
-      "date": "2026-03-20",
-      "dateText": "March 20 — May 2, 2026",
-      "text": "At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est lorem ipsum dolor sit amet.",
-      "images": [
-        "images/ex2-1.webp",
-        "images/ex2-2.webp"
-      ],
-      "videos": [
-        {
-          "youtube_id": "dQw4w9WgXcQ",
-          "title": "Exhibition walkthrough"
-        }
-      ]
-    },
-    {
-      "id": "kunstverein-sadipscing-2025",
-      "status": "past",
-      "venue": "Kunstverein Sadipscing",
-      "city": "Hamburg, Germany",
-      "title": "Magna Aliquyam",
-      "info": "With works by Oliver Schulz and Lena Lorem\nCurated by Jonas Ipsum",
-      "date": "2025-10-04",
-      "dateText": "October 4 — November 30, 2025",
-      "text": "",
-      "images": [
-        "images/ex3-1.webp",
-        "images/ex3-2.webp",
-        "images/ex3-3.webp"
-      ],
-      "videos": []
-    }
-  ],
+  "exhibitions": [],
   "projects": [
     {
       "slug": "mint-condition",
