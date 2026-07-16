@@ -125,39 +125,27 @@
     }
   ],
   "about": {
-    "portrait": "images/portrait.webp",
-    "intro": "Oliver Schulz is a visual artist based in Germany. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat.",
+    "portrait": "images/1784235006098-self-portrait.webp",
+    "intro": "Oliver Schulz is a artist based in Leipzig, Germany. ",
     "bio": "Born in Lorem, Germany. Studied fine arts at the Ipsum Academy, Dolor. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.\n\nAt vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est lorem ipsum dolor sit amet. Lives and works in Berlin.",
     "cv": [
       {
         "section": "Education",
         "items": [
-          "2008–2014 Ipsum Academy of Fine Arts, Dolor — Diploma",
-          "2014–2015 Meisterschüler, class of Prof. Lorem Amet"
-        ]
-      },
-      {
-        "section": "Awards & Grants",
-        "items": [
-          "2024 Lorem Ipsum Stipendium, Berlin",
-          "2021 Dolor Sit Art Prize, Hamburg",
-          "2018 Consetetur Grant for Young Artists"
+          "2019 - 2021",
+          "2021 - 2026"
         ]
       },
       {
         "section": "Selected Solo Exhibitions",
         "items": [
-          "2026 Tempor Invidunt, Galerie Consectetur, Leipzig",
-          "2024 Eirmod Tempor, Kunstraum Lorem, Munich",
-          "2022 Voluptua, Galerie Ipsum, Berlin"
+          "*soon as website is under construction*"
         ]
       },
       {
         "section": "Selected Group Exhibitions",
         "items": [
-          "2026 Ipsum Dolor Sit Amet, Kunsthalle Lorem, Berlin",
-          "2025 Magna Aliquyam, Kunstverein Sadipscing, Hamburg",
-          "2023 Stet Clita, Museum Kasd, Cologne"
+          "*soon as website is under construction*"
         ]
       }
     ]
