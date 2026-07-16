@@ -52,13 +52,15 @@
   "about": {
     "portrait": "images/1784235006098-self-portrait.webp",
     "intro": "Oliver Schulz is a artist based in Leipzig, Germany. ",
-    "bio": "",
+    "bio": "\n\nI am non-binary and I do not use pronouns.",
     "cv": [
       {
         "section": "Education",
         "items": [
+          "2011-2016 Medien- und Kommunikationswissenschaften, Martin Luther Universität Halle (no degree)",
           "2019 - 2021 Hochschule für Grafik und Buchkunst Leipzig, media art basic studies with Prof. Christin Lahr (& Peggy Buth)",
-          "2021 - 2026 Hochschule für Grafik und Buchkunst Leipzig, installation and space class with Prof. Joachim Blank"
+          "2021 - 2026 Hochschule für Grafik und Buchkunst Leipzig, installation and space class with Prof. Joachim Blank",
+          "2024 Accademia di Belle Arti di Napoli, Nuove Tecnologie dell'Arte"
         ]
       },
       {
